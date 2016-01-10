@@ -17,7 +17,6 @@ int SCAN::http_get(string ip_port){
   char ip[50]; 
   strcpy(ip, ip_port.c_str());
   //ip_port.c_str();
-  int isfound;
   if(curl){
     //cout<< "bbbbbbb" <<endl;
     curl_easy_setopt(curl, CURLOPT_PROXY, ip);
@@ -32,30 +31,9 @@ int SCAN::http_get(string ip_port){
     CURLcode res = curl_easy_perform(curl);
     //cout<<response<<endl;
     curl_easy_cleanup(curl);
-    isfound = response.find(flag);
+    int isfound = response.find(flag);
     cout<< isfound<<endl;    
   }  
   return isfound;
-}
-
-void SCAN::check_ip(){
-  int isfound = -1;
-  //while(!tasks.empty()){
-  while(true){
-    string ip = "";
-    mtx.lock();
-    if(!tasks.empty()){
-      ip = tasks.front();
-      tasks.pop();
-    }
-    mtx.unlock();
-    if(tasks.size() == 0){
-      break;
-    }
-    
-    isfound = http_get(ip);
-    cout<<"tasks size\t"  << tasks.size() << "\t" << isfound<<endl;
-  }
-  return;
 }
 
